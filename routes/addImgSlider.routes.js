@@ -27,7 +27,7 @@ router.get('/', (req, res) => {
     })
 })
 
-router.post('/addimage', upload.single('image'), (req, res, next) => {
+router.post('/create-image', upload.single('image'), (req, res, next) => {
     const obj = {
         name: req.body.name,
         img: {
