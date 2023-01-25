@@ -1,11 +1,9 @@
 const mongoose = require('mongoose')
 
 const imageSliderSchema = new mongoose.Schema({
-    name: String,
-    img: {
-        data: Buffer,
-        contentType: String
-    }
+  id: String,
+  name: String,
+  img: String
 })
 
-module.exports = new mongoose.model('sliderImage', imageSliderSchema);
+module.exports = new mongoose.model('sliderImage', imageSliderSchema)

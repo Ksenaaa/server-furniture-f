@@ -5,6 +5,7 @@
 /views
 /.pnp
 .pnp.js
+/routes/addImg.routes.js
 
 # testing
 /coverage
