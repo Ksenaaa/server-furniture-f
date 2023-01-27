@@ -11,7 +11,7 @@ router.get(
       let manyNews = await findNews.map(item => ({
         id: item._id,
         name: item.name,
-        img: item.pictures.img1.img
+        img: item.pictures[0]
       }))
 
       res.json(manyNews)
