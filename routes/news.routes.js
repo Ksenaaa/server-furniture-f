@@ -41,6 +41,23 @@ router.get(
 )
 
 router.get(
+  '/news-ids',
+  async (req, res) => {
+    try {
+      let findNews = await newsModel.find()
+      
+      let manyNews = await findNews.map(item => ({
+        id: item._id
+      }))
+
+      res.json(manyNews)
+    } catch (e) {
+      res.status(500).json({ message: "its Error, try again!" })
+    }
+  }
+)
+
+router.get(
   '/:id',
   async (req, res) => {
     try {
