@@ -8,13 +8,13 @@ router.get(
     try {
       let findNews = await newsModel.find()
       
-      let manyNews = await findNews.map(item => ({
+      let lastNews = await findNews.map(item => ({
         id: item._id,
         name: item.name,
         img: item.pictures[0]
-      }))
+      })).slice(-3)
 
-      res.json(manyNews.slice(-3))
+      res.json(lastNews)
     } catch (e) {
       res.status(500).json({ message: "its Error, try again!" })
     }
@@ -27,13 +27,13 @@ router.get(
     try {
       let findNews = await newsModel.find()
       
-      let manyNews = await findNews.map(item => ({
+      let allNews = await findNews.map(item => ({
         id: item._id,
         name: item.name,
         img: item.pictures[0]
       }))
 
-      res.json(manyNews)
+      res.json(allNews)
     } catch (e) {
       res.status(500).json({ message: "its Error, try again!" })
     }
@@ -44,13 +44,11 @@ router.get(
   '/news-ids',
   async (req, res) => {
     try {
-      let findNews = await newsModel.find()
-      
-      let manyNews = await findNews.map(item => ({
-        id: item._id
-      }))
+      let findIds = await newsModel.find({}, { _id : 1 })
 
-      res.json(manyNews)
+      const newsIds = findIds.map(item => ({ id: item._id }))
+
+      res.json(newsIds)
     } catch (e) {
       res.status(500).json({ message: "its Error, try again!" })
     }
