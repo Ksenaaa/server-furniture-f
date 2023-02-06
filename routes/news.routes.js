@@ -1,6 +1,7 @@
 const { Router } = require('express') 
 const router = Router()
 const newsModel = require('../models/news')
+const pagination = require('../utils/pagination')
 
 router.get(
   '/main-news',
@@ -8,13 +9,75 @@ router.get(
     try {
       let findNews = await newsModel.find()
       
-      let manyNews = await findNews.map(item => ({
+      let lastNews = await findNews.map(item => ({
+        id: item._id,
+        name: item.name,
+        img: item.pictures[0]
+      })).slice(-3)
+
+      res.json(lastNews)
+    } catch (e) {
+      res.status(500).json({ message: "its Error, try again!" })
+    }
+  }
+)
+
+router.get(
+  '/all-news',
+  async (req, res) => {
+    try {
+      const { page, limit } = req.query
+
+      const { dataModel, totalPages, currentPage } = await pagination(newsModel, page, limit)
+
+      let allNews = await dataModel.map(item => ({
         id: item._id,
         name: item.name,
         img: item.pictures[0]
       }))
+      
+      res.json({
+        allNews,
+        totalPages,
+        currentPage,
+      })
+    } catch (e) {
+      res.status(500).json({ message: "its Error, try again!" })
+    }
+  }
+)
 
-      res.json(manyNews)
+router.get(
+  '/news-ids',
+  async (req, res) => {
+    try {
+      let findIds = await newsModel.find({}, { _id : 1 })
+
+      const newsIds = findIds.map(item => ({ id: item._id }))
+
+      res.json(newsIds)
+    } catch (e) {
+      res.status(500).json({ message: "its Error, try again!" })
+    }
+  }
+)
+
+router.get(
+  '/:id',
+  async (req, res) => {
+    try {
+      const { id } = req.params
+
+      let findOneNews = await newsModel.find({ _id: id })
+
+      let oneNews = await findOneNews.map(item => ({
+        id: item._id,
+        name: item.name,
+        text: item.text,
+        pictures: item.pictures
+      }))
+
+      res.json(oneNews[0])
     } catch (e) {
       res.status(500).json({ message: "its Error, try again!" })
     }
