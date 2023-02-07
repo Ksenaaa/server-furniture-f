@@ -1,19 +1,20 @@
 const { Router } = require('express') 
 const router = Router()
 const newsModel = require('../models/news')
+const lastItem = require('../utils/lastItem')
 const pagination = require('../utils/pagination')
 
 router.get(
   '/main-news',
   async (req, res) => {
     try {
-      let findNews = await newsModel.find()
-      
-      let lastNews = await findNews.map(item => ({
+      const { dataModel } = await lastItem(newsModel, 3)
+  
+      let lastNews = await dataModel.map(item => ({
         id: item._id,
         name: item.name,
         img: item.pictures[0]
-      })).slice(-3)
+      }))
 
       res.json(lastNews)
     } catch (e) {
@@ -29,15 +30,15 @@ router.get(
       const { page, limit } = req.query
 
       const { dataModel, totalPages, currentPage } = await pagination(newsModel, page, limit)
-
-      let allNews = await dataModel.map(item => ({
+      
+      let pageData = await dataModel.map(item => ({
         id: item._id,
         name: item.name,
         img: item.pictures[0]
       }))
-      
+
       res.json({
-        allNews,
+        pageData,
         totalPages,
         currentPage,
       })
