@@ -8,7 +8,7 @@ router.get(
   '/main-testimonials',
   async (req, res) => {
     try {
-      const { dataModel } = await lastItem(testimonialsModel, 6)
+      const { dataModel } = await lastItem(testimonialsModel, '', '', 6)
 
       let testimonials = await dataModel.map(item => ({
         id: item._id,

@@ -8,7 +8,7 @@ router.get(
   '/main-news',
   async (req, res) => {
     try {
-      const { dataModel } = await lastItem(newsModel, 3)
+      const { dataModel } = await lastItem(newsModel, '', '', 3)
   
       let lastNews = await dataModel.map(item => ({
         id: item._id,
