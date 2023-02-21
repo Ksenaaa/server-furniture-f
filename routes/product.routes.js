@@ -7,7 +7,12 @@ router.get(
   '/new',
   async (req, res) => {
     try {
-      const { dataModel } = await lastItem(productModel, '', '', 6)
+      const { dataModel } = await lastItem({
+        Model: productModel, 
+        category: '', 
+        type: '', 
+        quantity: 6
+      })
 
       let products = await dataModel.map(item => ({
         id: item._id,
@@ -32,8 +37,13 @@ router.get(
     try {
       const { category } = req.params
 
-      const { dataModel } = await lastItem(productModel, category, '', 6)
-  
+      const { dataModel } = await lastItem({
+        Model: productModel, 
+        category, 
+        type: '', 
+        quantity: 6
+      })
+
       let lastProductsByCategory = await dataModel.map(item => ({
         id: item._id,
         name: item.name,
@@ -57,8 +67,13 @@ router.get(
     try {
       const { type } = req.params
 
-      const { dataModel } = await lastItem(productModel, '', type, 6)
-  
+      const { dataModel } = await lastItem({
+        Model: productModel, 
+        category: '', 
+        type, 
+        quantity: 6
+      })
+
       let lastProductsByType = await dataModel.map(item => ({
         id: item._id,
         name: item.name,

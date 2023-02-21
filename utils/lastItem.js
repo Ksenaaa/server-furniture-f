@@ -1,4 +1,4 @@
-const lastItem = (async(Model, category, type, quantity) => {
+const lastItem = (async({ Model, category, type, quantity }) => {
   let count
   let dataModel
 

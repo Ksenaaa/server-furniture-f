@@ -2,7 +2,7 @@ const createProductCode = (async(category, type, Model) => {
   const cat = (category.slice(0, 2) + category.slice(-1)).toUpperCase()
   const typ = type.slice(0, 2).toUpperCase()
 
-  const lastElement = await Model.find({ category: category, type: type }).limit(1).sort({$natural:-1})
+  const lastElement = await Model.find({ category, type }).limit(1).sort({$natural:-1})
 
   let currentNumber
 
