@@ -8,12 +8,7 @@ router.get(
   '/main-news',
   async (req, res) => {
     try {
-      const { dataModel } = await lastItem({
-        Model: newsModel, 
-        category: '', 
-        type: '', 
-        quantity: 3
-      })
+      const { dataModel } = await lastItem(newsModel, 3)
 
       let lastNews = await dataModel.map(item => ({
         id: item._id,
@@ -34,7 +29,13 @@ router.get(
     try {
       const { page, limit } = req.query
 
-      const { dataModel, totalPages, currentPage } = await pagination(newsModel, page, limit)
+      const { dataModel, totalPages, currentPage } = await pagination({ 
+        Model: newsModel, 
+        category: '', 
+        type: '', 
+        page, 
+        limit 
+      })
       
       let pageData = await dataModel.map(item => ({
         id: item._id,

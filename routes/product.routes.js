@@ -2,17 +2,13 @@ const { Router } = require('express')
 const router = Router()
 const productModel = require('../models/product')
 const lastItem = require('../utils/lastItem')
+const pagination = require('../utils/pagination')
 
 router.get(
   '/new',
   async (req, res) => {
     try {
-      const { dataModel } = await lastItem({
-        Model: productModel, 
-        category: '', 
-        type: '', 
-        quantity: 6
-      })
+      const { dataModel } = await lastItem(productModel, 6)
 
       let products = await dataModel.map(item => ({
         id: item._id,
@@ -32,19 +28,21 @@ router.get(
 )
 
 router.get(
-  '/some-category/:category',
+  '/category/:category',
   async (req, res) => {
     try {
       const { category } = req.params
+      const { page, limit } = req.query
 
-      const { dataModel } = await lastItem({
+      const { dataModel, totalPages, currentPage } = await pagination({ 
         Model: productModel, 
         category, 
         type: '', 
-        quantity: 6
+        page, 
+        limit 
       })
 
-      let lastProductsByCategory = await dataModel.map(item => ({
+      let pageData = await dataModel.map(item => ({
         id: item._id,
         name: item.name,
         code: item.code,
@@ -54,7 +52,11 @@ router.get(
         img: item.imgs[0]
       }))
 
-      res.json(lastProductsByCategory)
+      res.json({
+        pageData,
+        totalPages,
+        currentPage,
+      })
     } catch (e) {
       res.status(500).json({ message: "its Error, try again!" })
     }
@@ -62,19 +64,21 @@ router.get(
 )
 
 router.get(
-  '/some-type/:type',
+  '/type/:type',
   async (req, res) => {
     try {
       const { type } = req.params
+      const { page, limit } = req.query
 
-      const { dataModel } = await lastItem({
+      const { dataModel, totalPages, currentPage } = await pagination({ 
         Model: productModel, 
         category: '', 
         type, 
-        quantity: 6
+        page, 
+        limit 
       })
 
-      let lastProductsByType = await dataModel.map(item => ({
+      const pageData = await dataModel.map(item => ({
         id: item._id,
         name: item.name,
         code: item.code,
@@ -84,7 +88,11 @@ router.get(
         img: item.imgs[0]
       }))
 
-      res.json(lastProductsByType)
+      res.json({
+        pageData,
+        totalPages,
+        currentPage,
+      })
     } catch (e) {
       res.status(500).json({ message: "its Error, try again!" })
     }
