@@ -3,7 +3,7 @@ const lastItem = (async(Model, quantity) => {
 
   const dataModel = await Model.find()
     .limit(quantity)
-    .skip(count - quantity)
+    .skip(count < quantity ? 0 : count - quantity)
     .exec()
 
   return { dataModel }

@@ -30,7 +30,13 @@ router.get(
     try {
       const { page, limit } = req.query
 
-      const { dataModel, totalPages, currentPage } = await pagination(testimonialsModel, page, limit)
+      const { dataModel, totalPages, currentPage } = await pagination({ 
+        Model: testimonialsModel, 
+        category: '', 
+        type: '', 
+        page, 
+        limit 
+      })
 
       let pageData = await dataModel.map(item => ({
         id: item._id,

@@ -18,6 +18,8 @@ app.use('/slider', require('./routes/slider.routes'))
 app.use('/main-catalog', require('./routes/mainCatalog.routes'))
 app.use('/news', require('./routes/news.routes'))
 app.use('/testimonials', require('./routes/testimonials.routes'))
+app.use('/product', require('./routes/product.routes'))
+app.use('/colors', require('./routes/colors.routes'))
  
 app.set("view engine", "ejs")
 
