@@ -1,4 +1,4 @@
-const lastItem = (async(Model, quantity) => {
+const lastItems = (async(Model, quantity) => {
   const count = await Model.countDocuments()
 
   const dataModel = await Model.find()
@@ -9,4 +9,4 @@ const lastItem = (async(Model, quantity) => {
   return { dataModel }
 })
 
-module.exports = lastItem
+module.exports = lastItems

@@ -1,24 +1,19 @@
 const { Router } = require('express') 
 const router = Router()
 const productModel = require('../models/product')
-const lastItem = require('../utils/lastItem')
-const pagination = require('../utils/pagination')
+const colorsModel = require('../models/color')
+const lastItems = require('../utils/lastItems')
+const paginationByElement = require('../utils/paginationByElement')
+const paginationProductsList = require('../utils/paginationProductsList')
+const productsCursor = require('../utils/productsCursor')
 
 router.get(
   '/new',
   async (req, res) => {
     try {
-      const { dataModel } = await lastItem(productModel, 6)
+      const { dataModel } = await lastItems(productModel, 6)
 
-      let products = await dataModel.map(item => ({
-        id: item._id,
-        name: item.name,
-        code: item.code,
-        category: item.category,
-        price: item.quality.standart,
-        colors: item.colors,
-        img: item.imgs[0]
-      }))
+      const { products } = await productsCursor(dataModel)
 
       res.json(products)
     } catch (e) {
@@ -28,34 +23,29 @@ router.get(
 )
 
 router.get(
-  '/category/:category',
+  '/list/:category',
   async (req, res) => {
     try {
       const { category } = req.params
-      const { page, limit } = req.query
+      const { page, limit, filter, sort } = req.query
 
-      const { dataModel, totalPages, currentPage } = await pagination({ 
-        Model: productModel, 
+      const { productsData, totalPages, currentPage, filterData } = await paginationProductsList({ 
+        Products: productModel, 
+        Colors: colorsModel, 
         category, 
-        type: '', 
         page, 
-        limit 
+        limit,
+        filter,
+        sort
       })
 
-      let pageData = await dataModel.map(item => ({
-        id: item._id,
-        name: item.name,
-        code: item.code,
-        category: item.category,
-        price: item.quality.standart,
-        colors: item.colors,
-        img: item.imgs[0]
-      }))
+      const { products } = await productsCursor(productsData)
 
       res.json({
-        pageData,
+        pageData: products,
         totalPages,
         currentPage,
+        filterData
       })
     } catch (e) {
       res.status(500).json({ message: "its Error, try again!" })
@@ -64,32 +54,24 @@ router.get(
 )
 
 router.get(
-  '/type/:type',
+  '/:element/:elementName',
   async (req, res) => {
     try {
-      const { type } = req.params
+      const { element, elementName } = req.params
       const { page, limit } = req.query
 
-      const { dataModel, totalPages, currentPage } = await pagination({ 
+      const { dataModel, totalPages, currentPage } = await paginationByElement({ 
         Model: productModel, 
-        category: '', 
-        type, 
+        element,
+        elementName, 
         page, 
         limit 
       })
 
-      const pageData = await dataModel.map(item => ({
-        id: item._id,
-        name: item.name,
-        code: item.code,
-        category: item.category,
-        price: item.quality.standart,
-        colors: item.colors,
-        img: item.imgs[0]
-      }))
+      const { products } = await productsCursor(dataModel)
 
       res.json({
-        pageData,
+        pageData: products,
         totalPages,
         currentPage,
       })
