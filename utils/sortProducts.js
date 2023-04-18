@@ -7,10 +7,12 @@ const sortProducts = (sortData) => {
       return parseSort[newElement[0]] = newElement[1]
     })
     
-    const sortField = parseSort.option === 'price' ? 'quality.standart' :
-      parseSort.option === 'name' ? 'name' :
-      parseSort.option === 'popularity' ? 'popularity' :
-      ''
+    let sortField 
+
+    if (parseSort.option === 'price') sortField = 'quality.standart'
+    if (parseSort.option === 'name') sortField = 'name'
+    if (parseSort.option === 'popularity') sortField = 'popularity'
+
     const sortOrder = parseSort.method === 'asc' ? 1 : -1
 
     return { [sortField]: sortOrder, _id: 1 }

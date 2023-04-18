@@ -1,6 +1,7 @@
 const { Router } = require('express') 
 const router = Router()
 const testimonialsModel = require('../models/testimonials')
+const quantityElementsToDisplay = require('../utils/constants/quantityElementsToDisplay')
 const lastItems = require('../utils/lastItems')
 const paginationByElement = require('../utils/paginationByElement')
 
@@ -8,7 +9,7 @@ router.get(
   '/main-testimonials',
   async (req, res) => {
     try {
-      const { dataModel } = await lastItems(testimonialsModel, 6)
+      const { dataModel } = await lastItems(testimonialsModel, quantityElementsToDisplay)
 
       let testimonials = await dataModel.map(item => ({
         id: item._id,

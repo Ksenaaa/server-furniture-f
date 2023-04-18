@@ -6,12 +6,13 @@ const lastItems = require('../utils/lastItems')
 const paginationByElement = require('../utils/paginationByElement')
 const paginationProductsList = require('../utils/paginationProductsList')
 const productsCursor = require('../utils/productsCursor')
+const quantityElementsToDisplay = require('../utils/constants/quantityElementsToDisplay')
 
 router.get(
   '/new',
   async (req, res) => {
     try {
-      const { dataModel } = await lastItems(productModel, 6)
+      const { dataModel } = await lastItems(productModel, quantityElementsToDisplay)
 
       const { products } = await productsCursor(dataModel)
 

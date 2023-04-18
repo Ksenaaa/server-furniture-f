@@ -21,23 +21,21 @@ const createFilterData = (productsModel, colorsModel, parseFilter) => {
   const productLength = productsModel.map(element => element.characteristics.size.length)
 
   const createFilterElementCheckbox = (data, nameElement) => {
-    let resultValue = {}
-
-    data.sort().forEach(element => {
-      resultValue[element] = resultValue[element] + 1 || 1
-    })
-
+    const resultValue = data.sort().reduce((acc, item) => {
+      acc[item] = acc[item] + 1 || 1
+      return acc
+    }, {})
+    
     let value = []
+
     for (let key in resultValue) {
       value.push({ name: key, count: resultValue[key] })
     }
 
-    let elementFilter = {
+    return {
       title: nameElement,
       value: value
     }
-
-    return elementFilter
   }
 
   const createFilterElementRange = (productValue, nameElement, filterParse) => {
@@ -54,9 +52,10 @@ const createFilterData = (productsModel, colorsModel, parseFilter) => {
         const from = valueElement.from
         const to = valueElement.to
 
-        return from && to ? element >= from && element <= to :
-          from ? element >= from :
-            to ? element <= to : 0
+        if (from && to && element >= from && element <= to) {
+          if (from) return element >= from
+          if (to) return element <= to
+        } else return
       })
       
       countProduct = filterElement.length
@@ -64,13 +63,11 @@ const createFilterData = (productsModel, colorsModel, parseFilter) => {
       countProduct = productValue.length
     }
     
-    const elementFilter = {
+    return {
       title: nameElement,
       value: {},
       count: countProduct
     }
-
-    return elementFilter
   }
 
   filterData = {
