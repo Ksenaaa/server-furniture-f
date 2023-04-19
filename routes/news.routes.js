@@ -1,14 +1,14 @@
 const { Router } = require('express') 
 const router = Router()
 const newsModel = require('../models/news')
-const lastItem = require('../utils/lastItem')
-const pagination = require('../utils/pagination')
+const lastItems = require('../utils/lastItems')
+const paginationByElement = require('../utils/paginationByElement')
 
 router.get(
   '/main-news',
   async (req, res) => {
     try {
-      const { dataModel } = await lastItem(newsModel, 3)
+      const { dataModel } = await lastItems(newsModel, 3)
 
       let lastNews = await dataModel.map(item => ({
         id: item._id,
@@ -29,10 +29,8 @@ router.get(
     try {
       const { page, limit } = req.query
 
-      const { dataModel, totalPages, currentPage } = await pagination({ 
+      const { dataModel, totalPages, currentPage } = await paginationByElement({ 
         Model: newsModel, 
-        category: '', 
-        type: '', 
         page, 
         limit 
       })
